@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import (
                                 TemplateView, ListView,
-                                DetailView, CreateView,
-                                UpdateView, DeleteView
+                                CreateView, UpdateView,
                             )
+from django.db.models import Q
+from django.core.exceptions import ImproperlyConfigured
+from django.http import Http404
 # Create your views here.
 
 
@@ -11,22 +13,21 @@ class XListView(ListView):
     '''
     List view with search and sort criteria
     '''
-    search_fields = list()
-    filter_fields = list()
-    model = object()
-    queryset = object()
-    order_by = list()
-    success_url = str()
+    template_name = None
+    model = None
+    queryset = None
+    ordering = None
+    search_fields = None
+    success_url = None
 
     def post(self, request, *args, **kwargs):
         '''
         add keywords to url in post search
         '''
-        keys =list()
         if request.POST['search']:
             keys.append(f"search={request.POST['search']}")
-
-        return get_success_url
+        else:
+            raise Http404
 
     def get_context_data(self, *, object_list=None, **kwargs):
         '''
@@ -34,9 +35,6 @@ class XListView(ListView):
         '''
         context = super().get_context_data(**kwargs)
 
-        if self.request.GET.get('filter'):
-            filter = self.request.GET.get('filter')
-            kwargs.update({'filter': filter})
         if self.request.GET.get('search'):
             search = self.request.GET.get('search')
             kwargs.update({'search': search})
@@ -49,23 +47,26 @@ class XListView(ListView):
 
     def get_queryset(self):
         '''
-        get articles
+        get queryset
         '''
-        if self.queryset:
-            queryset = self.queryset
+        queryset = super().get_queryset()
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
         else:
-            queryset = self.model.objects.all()
-
+            ordering = ('id', )
         if self.request.GET.get('search'):
             search = self.request.GET.get('search')
-            queryset = queryset.filter(
-                            title__contains=search).order_by('-created_at')
-        if self.request.GET.get('filter'):
-            filter = self.request.GET.get('filter')
-            queryset = queryset.filter(
-                            category=filter).order_by('-created_at')
+            fields = None
+            for field in self.search_fields:
+                if fields is None:
+                    fields = f"Q ({field}__contains = '{search}')"
+                else:
+                    fields += f" | Q ({field}__contains = '{search}')"
+            exec(f"queryset = queryset.filter({fields}).order_by(*{ordering})")
         if self.request.GET.get('sort'):
             sort = self.request.GET.get('sort')
             queryset = queryset.all().order_by(sort)
-        
+
         return queryset
