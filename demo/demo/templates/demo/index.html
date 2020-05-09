@@ -1,4 +1,7 @@
 {% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load x_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -30,16 +33,82 @@
       integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
       crossorigin="anonymous">
 
-      <!--MAIN STYLE-->
-      <link
-        href="{% static 'demo/style.css' %}"
-        rel="stylesheet"
-        type="text/css">
+    <!--MAIN STYLE-->
+    <link
+      href="{% static 'demo/style.css' %}"
+      rel="stylesheet"
+      type="text/css">
 
   </head>
   <body>
     <div class="container">
-
+      <br>
+      <h1 class="text-center">Demo Project</h1>
+      <hr>
+      <br>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input class="btn btn-primary" type="submit" value="{% trans 'Search' %}">
+      </form>
+      <hr>
+      <table class="table table-striped table-sm">
+        <tbody>
+          <tr>
+            <th scope="row">
+              <a
+                {% if sort == 'name' %}
+                href="{% add_parameter request.get_full_path 'sort=' '-name' %}"
+                {% else %}
+                href="{% add_parameter request.get_full_path 'sort=' 'name' %}"
+                {% endif %}>
+                {% trans 'Name' %}
+              </a>
+            </th>
+            <td>
+              <strong>
+                <a
+                  {% if sort == 'description' %}
+                  href="{% add_parameter request.get_full_path 'sort=' '-description' %}"
+                  {% else %}
+                  href="{% add_parameter request.get_full_path 'sort=' 'description' %}"
+                  {% endif %}>
+                  {% trans 'Description' %}
+                </a>
+              </strong>
+            </td>
+            <td>
+              <strong>
+                <a
+                  {% if sort == 'created_at' %}
+                  href="{% add_parameter request.get_full_path 'sort=' '-created_at' %}"
+                  {% else %}
+                  href="{% add_parameter request.get_full_path 'sort=' 'created_at' %}"
+                  {% endif %}>
+                  {% trans 'Created at' %}
+                </a>
+              </strong>
+            </td>
+          </tr>
+        {% for recipe in recipe_list %}
+          <tr class="table-row">
+            <th scope="row">
+              {{ recipe.name }}
+            </th>
+            <td>
+              {{ recipe.description }}
+            </td>
+            <td>
+              {{ recipe.created_at }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <th scope="row">{% trans 'No recipes found' %}</th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
