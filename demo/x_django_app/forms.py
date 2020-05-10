@@ -7,10 +7,12 @@ class SearchForm(forms.Form):
     Form for search bar of the XListView
     '''
     search = forms.CharField(
-                            label=_('Search'),
+                            label='',
                             max_length=128,
-                            help_text=_('Enter your search keywords here'),
-                            required=True)
+                            required=False,
+                            widget=forms.TextInput(
+                                        attrs={'placeholder': _('search')})
+                            )
 
     def __init__(self, *args, **kwargs):
         '''

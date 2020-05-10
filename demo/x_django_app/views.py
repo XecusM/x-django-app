@@ -33,7 +33,7 @@ class XListView(ListView, FormView):
                                                     request.path_info,
                                                     request.POST['search']))
         else:
-            raise Http404
+            return HttpResponseRedirect(request.path_info)
 
     def get_form_kwargs(self):
         '''
@@ -74,14 +74,14 @@ class XListView(ListView, FormView):
             ordering = ('id', )
         if self.request.GET.get('search'):
             search = self.request.GET.get('search')
-            fields = None
+            fields = dict()
             for field in self.search_fields:
-                if fields is None:
-                    fields = f"Q ({field}__contains = '{search}')"
-                else:
-                    fields += f" | Q ({field}__contains = '{search}')"
-            print(fields)
-            queryset = queryset.filter(fields).distinct().order_by(*ordering)
+                field += '__contains'
+                fields[field] = search
+            or_condition = Q()
+            for key, value in fields.items():
+                or_condition.add(Q(**{key: value}), Q.OR)
+            queryset = queryset.filter(or_condition).distinct().order_by(*ordering)
             print(queryset)
         if self.request.GET.get('sort'):
             sort = self.request.GET.get('sort')
