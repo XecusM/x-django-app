@@ -20,3 +20,5 @@ class Index(XListView):
     template_name = 'demo/index.html'
     model = models.Recipe
     search_fields = ['name', 'description']
+    queryset = models.Recipe.objects.all()
+    paginate_by = 20

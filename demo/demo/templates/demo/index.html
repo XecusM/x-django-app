@@ -57,34 +57,20 @@
           <tr>
             <th scope="row">
               <a
-                {% if sort == 'name' %}
-                href="{% add_parameter request.get_full_path 'sort=' '-name' %}"
-                {% else %}
-                href="{% add_parameter request.get_full_path 'sort=' 'name' %}"
-                {% endif %}>
+                href="{% x_sort sort 'name' %}">
                 {% trans 'Name' %}
               </a>
             </th>
             <td>
               <strong>
-                <a
-                  {% if sort == 'description' %}
-                  href="{% add_parameter request.get_full_path 'sort=' '-description' %}"
-                  {% else %}
-                  href="{% add_parameter request.get_full_path 'sort=' 'description' %}"
-                  {% endif %}>
+                <a href="{% x_sort sort 'description' %}">
                   {% trans 'Description' %}
                 </a>
               </strong>
             </td>
             <td>
               <strong>
-                <a
-                  {% if sort == 'created_at' %}
-                  href="{% add_parameter request.get_full_path 'sort=' '-created_at' %}"
-                  {% else %}
-                  href="{% add_parameter request.get_full_path 'sort=' 'created_at' %}"
-                  {% endif %}>
+                <a href="{% x_sort sort 'created_at' %}">
                   {% trans 'Created at' %}
                 </a>
               </strong>
@@ -109,6 +95,7 @@
           {% endfor %}
         </tbody>
       </table>
+      {% include 'x_django_app/_pagination.html' %}
     </div>
   </body>
 </html>

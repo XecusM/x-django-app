@@ -8,6 +8,7 @@ class RecipeForm(forms.ModelForm):
     '''
 
     class Meta:
+        model = models.Recipe
         fields = ['name', 'description']
 
 
@@ -17,4 +18,5 @@ class ItemForm(forms.ModelForm):
     '''
 
     class Meta:
-        fields = ['name', 'quantity']
+        model = models.Item
+        fields = ['recipe', 'name', 'quantity']

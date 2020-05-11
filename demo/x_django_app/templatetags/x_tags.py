@@ -93,6 +93,20 @@ def add_parameter(link, parameter, variable):
         return new_link
 
 
+@register.simple_tag(takes_context=True)
+def x_sort(context, active, target):
+    '''
+    sort function template tag
+    '''
+    request = context['request']
+    if active == target:
+        target = f"-{target}"
+
+    new_link = add_parameter(request.get_full_path(), 'sort=', target)
+
+    return new_link
+
+
 @register.filter
 def trunc(text, digits=128):
     '''
