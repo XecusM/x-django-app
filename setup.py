@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name="x-django-app",
-    version="1.0.0",
+    version="0.2",
     description="A Python package to get weather reports for any location.",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
     ],
-    packages=["demo/x_django_app"],
+    packages=["x_django_app"],
     include_package_data=True,
     install_requires=['django', 'langdetect'],
 )
