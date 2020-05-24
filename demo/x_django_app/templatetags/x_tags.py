@@ -2,6 +2,7 @@
 from django import template
 from langdetect import detect
 import json
+from django.contrib.auth.models import Permission
 
 
 register = template.Library()
@@ -126,3 +127,20 @@ def make_clear(text):
     text = text.replace('_', ' ')
     text = f'{text[0].upper()}{text[1:]}'
     return text
+
+
+@register.filter
+def permission_check(user, permission):
+    '''
+    Check if user has permission
+    '''
+    try:
+        user_permission = Permission.objects.get(codename=permission)
+        if user.user_permissions.filter(
+                                    id=user_permission.id).exists():
+            return True
+        else:
+            return False
+    except Exception as error_type:
+        print(f"{permission}-{error_type}")
+        return False
