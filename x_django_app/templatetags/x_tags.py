@@ -113,8 +113,11 @@ def trunc(text, digits=128):
     '''
     Return the class name of the item
     '''
-    digits = int(digits)
-    trancated = (text[:digits] + '..') if len(text) > digits else text
+    if text:
+        digits = int(digits)
+        trancated = (text[:digits] + '..') if len(text) > digits else text
+    else:
+        trancated = text
 
     return trancated
 
