@@ -85,5 +85,9 @@ class XListView(ListView, FormView):
             print(queryset)
         if self.request.GET.get('sort'):
             sort = self.request.GET.get('sort')
-            queryset = queryset.all().order_by(sort)
+            reverse = False
+            if sort[0] == '-':
+                sort = sort[1:]
+                reverse = True
+            exec(f"sorted(queryset.all(), key=lambda q: q.{sort}, reverse={reverse})")
         return queryset
