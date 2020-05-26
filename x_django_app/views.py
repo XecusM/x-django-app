@@ -44,6 +44,9 @@ class XListView(ListView, FormView):
         return kwargs
 
     def get_initial(self):
+        '''
+        get initial values for the class
+        '''
         return {'search': self.request.GET.get('search')}
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -81,8 +84,8 @@ class XListView(ListView, FormView):
             or_condition = Q()
             for key, value in fields.items():
                 or_condition.add(Q(**{key: value}), Q.OR)
-            queryset = queryset.filter(or_condition).distinct().order_by(*ordering)
-            print(queryset)
+            queryset = queryset.filter(
+                                or_condition).distinct().order_by(*ordering)
         if self.request.GET.get('sort'):
             sort = self.request.GET.get('sort')
             queryset = queryset.all().order_by(sort)

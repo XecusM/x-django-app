@@ -9,7 +9,7 @@ register = template.Library()
 
 
 @register.filter
-def to_class_name(item):
+def class_name(item):
     '''
     Return the class name of the item
     '''
