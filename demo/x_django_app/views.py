@@ -9,6 +9,7 @@ from django.http import Http404
 from django.http import HttpResponseRedirect
 
 from .forms import SearchForm
+from .models import Activity
 # Create your views here.
 
 
@@ -90,3 +91,87 @@ class XListView(ListView, FormView):
             sort = self.request.GET.get('sort')
             queryset = queryset.all().order_by(sort)
         return queryset
+
+
+class XCreateView(CreateView):
+    '''
+    Create a new object with activity and created_by for requested user
+    '''
+
+    def form_valid(self, form):
+        '''
+        Method for valid form
+        '''
+        self.object = form.save()
+        self.object.created_by = self.request.user
+        self.object.save()
+        # Store user activity
+        activity = Activity.objects.create_activity(
+                                activity_object=self.object,
+                                activity=Activity.CREATE,
+                                user=self.request.user,
+                                message=self.get_message(self.object)
+        )
+        activity.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_message(self, object):
+        '''
+        return activity messsage for the selected object
+        '''
+        return f"Object-{object.id}"
+
+
+class XUpdateView(UpdateView):
+    '''
+    Edit an existing object with activity and edited for requested user
+    '''
+    def form_valid(self, form):
+        '''
+        Method for valid form
+        '''
+        self.object = form.save()
+        self.object.edited(self.request.user)
+        self.object.save()
+        self.object.refresh_from_db()
+        # Store user activity
+        activity = Activity.objects.create_activity(
+                                activity_object=self.object,
+                                activity=Activity.EDIT,
+                                user=self.request.user,
+                                message=self.get_message(self.object)
+        )
+        activity.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_message(self, object):
+        '''
+        return activity messsage for the selected object
+        '''
+        return f"Object-{object.id}"
+
+# Function views
+
+
+def record_delete_object(request, object, message):
+    '''
+    Record delete activity to requested user
+    '''
+    activity = Activity.objects.create_activity(
+                        activity_object=object,
+                        activity=Activity.DELETE,
+                        user=request.user,
+                        message=message
+    )
+    activity.save()
+
+    try:
+        with transaction.atomic():
+            object.delete()
+    except Exception as error_type:
+        print(error_type)
+        activity.delete()
+        return False
+    return True
