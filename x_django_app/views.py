@@ -1,12 +1,10 @@
-from django.shortcuts import render
 from django.views.generic import (
-                                TemplateView, ListView, FormView,
+                                ListView, FormView,
                                 CreateView, UpdateView,
                             )
 from django.db.models import Q
-from django.core.exceptions import ImproperlyConfigured
-from django.http import Http404
 from django.http import HttpResponseRedirect
+from django.db import transaction
 
 from .forms import SearchForm
 from .models import Activity
@@ -155,7 +153,7 @@ class XUpdateView(UpdateView):
 # Function views
 
 
-def record_delete_object(request, object, message):
+def x_record_delete_object(request, object, message):
     '''
     Record delete activity to requested user
     '''

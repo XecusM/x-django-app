@@ -2,6 +2,7 @@
 from django import template
 from langdetect import detect
 import json
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 
 
@@ -80,7 +81,7 @@ def add_parameter(link, parameter, variable):
                     new_link = f"{new_link}&{parameter}{variable}"
                 else:
                     new_link = f"{new_link}&{item}"
-            if not f"{parameter}{variable}" in new_link:
+            if f"{parameter}{variable}" not in new_link:
                 new_link = f"{new_link}&{parameter}{variable}"
         else:
             if parameter in second_split[0]:
@@ -137,13 +138,31 @@ def permission_check(user, permission):
     '''
     Check if user has permission
     '''
-    try:
-        user_permission = Permission.objects.get(codename=permission)
-        if user.user_permissions.filter(
-                                    id=user_permission.id).exists():
-            return True
-        else:
+    permission_details = permission.split('.')
+    if len(permission_details) == 1:
+        try:
+            user_permission = Permission.objects.get(
+                                        codename=permission_details[0])
+            if user.user_permissions.filter(id=user_permission.id).exists():
+                return True
+            else:
+                return False
+        except Exception as error_type:
+            print(f"{permission_details[0]}-{error_type}")
             return False
-    except Exception as error_type:
-        print(f"{permission}-{error_type}")
+    elif len(permission_details) == 2:
+        try:
+            content_type = ContentType.objects.filter(
+                                            app_label=permission_details[0])
+            user_permission = Permission.objects.get(
+                                            content_type__in=content_type,
+                                            codename=permission_details[1])
+            if user.user_permissions.filter(id=user_permission.id).exists():
+                return True
+            else:
+                return False
+        except Exception as error_type:
+            print(f"{permission}-{error_type}")
+            return False
+    else:
         return False

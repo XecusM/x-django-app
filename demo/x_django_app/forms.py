@@ -11,8 +11,7 @@ class SearchForm(forms.Form):
                             max_length=128,
                             required=False,
                             widget=forms.TextInput(
-                                        attrs={'placeholder': _('search')})
-                            )
+                                    attrs={'placeholder': _('search')}))
 
     def __init__(self, *args, **kwargs):
         '''

@@ -40,6 +40,13 @@ class Activity(models.Model):
     RESTORE = 'RS'
     EXPORT = 'EX'
     IMPORT = 'IM'
+    PUBLISH = 'PU'
+    ACCEPT = 'AC'
+    REJECT = 'RJ'
+    ENABLE = 'EN'
+    DISABLE = 'DI'
+    ACTIVATE = 'AV'
+    DEACTIVATE = 'DV'
     activity_choices = [
                         (CREATE, _('Create')),
                         (EDIT, _('Edit')),
@@ -50,6 +57,13 @@ class Activity(models.Model):
                         (RESTORE, _('Restore')),
                         (EXPORT, _('Export')),
                         (IMPORT, _('Import')),
+                        (PUBLISH, _('Publish')),
+                        (ACCEPT, _('Accept')),
+                        (REJECT, _('Reject')),
+                        (ENABLE, _('Enable')),
+                        (DISABLE, _('Disable')),
+                        (ACTIVATE, _('Activate')),
+                        (DEACTIVATE, _('Deactivate')),
     ]
     #####################
     user = models.ForeignKey(
