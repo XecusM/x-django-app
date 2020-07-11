@@ -26,7 +26,7 @@ class ActivityManager(models.Manager):
         )
 
 
-class Activity(models.Model):
+class XActivity(models.Model):
     '''
     Store all user activities
     '''
@@ -68,7 +68,7 @@ class Activity(models.Model):
     #####################
     user = models.ForeignKey(
                         get_user_model(),
-                        related_name='user_activity',
+                        related_name='x_user_activity',
                         verbose_name=_('User'),
                         on_delete=models.CASCADE,
                         blank=False,

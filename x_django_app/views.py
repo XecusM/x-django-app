@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.db import transaction
 
 from .forms import SearchForm
-from .models import Activity
+from .models import XActivity
 # Create your views here.
 
 
@@ -104,9 +104,9 @@ class XCreateView(CreateView):
         self.object.created_by = self.request.user
         self.object.save()
         # Store user activity
-        activity = Activity.objects.create_activity(
+        activity = XActivity.objects.create_activity(
                                 activity_object=self.object,
-                                activity=Activity.CREATE,
+                                activity=XActivity.CREATE,
                                 user=self.request.user,
                                 message=self.get_message(self.object)
         )
@@ -134,9 +134,9 @@ class XUpdateView(UpdateView):
         self.object.save()
         self.object.refresh_from_db()
         # Store user activity
-        activity = Activity.objects.create_activity(
+        activity = XActivity.objects.create_activity(
                                 activity_object=self.object,
-                                activity=Activity.EDIT,
+                                activity=XActivity.EDIT,
                                 user=self.request.user,
                                 message=self.get_message(self.object)
         )
@@ -157,9 +157,9 @@ def x_record_delete_object(request, object, message):
     '''
     Record delete activity to requested user
     '''
-    activity = Activity.objects.create_activity(
+    activity = XActivity.objects.create_activity(
                         activity_object=object,
-                        activity=Activity.DELETE,
+                        activity=XActivity.DELETE,
                         user=request.user,
                         message=message
     )
