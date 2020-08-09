@@ -51,7 +51,7 @@ Django application for all my custom stuff
 
 - *make_clear* replace all ' _ ' to ' '
 
-- *permission_check* chack if user has specific permission regardless if user is superuser or not
+- *permission_check* check if user has specific permission regardless if user is superuser or not
 
 - *x_sort* sort model data with selected field
 
