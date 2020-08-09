@@ -78,7 +78,7 @@ class XListView(ListView, FormView):
             search = self.request.GET.get('search')
             fields = dict()
             for field in self.search_fields:
-                field += '__contains'
+                field += '__icontains'
                 fields[field] = search
             or_condition = Q()
             for key, value in fields.items():
