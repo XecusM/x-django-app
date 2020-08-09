@@ -65,12 +65,12 @@ recommended python==3.8.2
 * Install using pip\
 pip install x-django-app
 
-* Add "x_django_app" to your INSTALLED_APPS settings::
-
-    INSTALLED_APPS = [
-        ...
-        'x_django_app',
-    ]
+* Add "x_django_app" to your INSTALLED_APPS settings:\
+\
+  INSTALLED_APPS = [\
+      ...\
+      'x_django_app',\
+  ]
 
 
 ## Use:
