@@ -48,6 +48,7 @@ class XActivity(models.Model):
     ACTIVATE = 'AV'
     DEACTIVATE = 'DV'
     BLOCK = 'BL'
+    APPROVE = 'AP'
     LIKE = 'LK'
     UNLIKE = 'UL'
     RECOMMEND = 'RC'
@@ -70,6 +71,7 @@ class XActivity(models.Model):
                         (ACTIVATE, _('Activate')),
                         (DEACTIVATE, _('Deactivate')),
                         (BLOCK, _('Block')),
+                        (APPROVE, _('Approve')),
                         (LIKE, _('Like')),
                         (UNLIKE, _('Unlike')),
                         (RECOMMEND, _('Recommend')),
