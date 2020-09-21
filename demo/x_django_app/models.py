@@ -47,6 +47,11 @@ class XActivity(models.Model):
     DISABLE = 'DI'
     ACTIVATE = 'AV'
     DEACTIVATE = 'DV'
+    BLOCK = 'BL'
+    LIKE = 'LK'
+    UNLIKE = 'UL'
+    RECOMMEND = 'RC'
+    UNRECOMMEND = 'UC'
     activity_choices = [
                         (CREATE, _('Create')),
                         (EDIT, _('Edit')),
@@ -64,6 +69,11 @@ class XActivity(models.Model):
                         (DISABLE, _('Disable')),
                         (ACTIVATE, _('Activate')),
                         (DEACTIVATE, _('Deactivate')),
+                        (BLOCK, _('Block')),
+                        (LIKE, _('Like')),
+                        (UNLIKE, _('Unlike')),
+                        (RECOMMEND, _('Recommend')),
+                        (UNRECOMMEND, _('Unrecommend')),
     ]
     #####################
     user = models.ForeignKey(
