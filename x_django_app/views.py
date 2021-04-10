@@ -101,7 +101,6 @@ class XCreateView(CreateView):
         Method for valid form
         '''
         self.object = form.save()
-        self.object.created_by = self.request.user
         self.object.save()
         # Store user activity
         activity = XActivity.objects.create_activity(
@@ -130,7 +129,6 @@ class XUpdateView(UpdateView):
         Method for valid form
         '''
         self.object = form.save()
-        self.object.edited(self.request.user)
         self.object.save()
         self.object.refresh_from_db()
         # Store user activity
