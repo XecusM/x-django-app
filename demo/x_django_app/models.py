@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.translation import ugettext_lazy as _
 
+from django.contrib.admin.options import get_content_type_for_model
+
 
 # Create your models here.
 
@@ -131,3 +133,21 @@ class XActivity(models.Model):
         give the string representation
         '''
         return f"{self.user.id}-{self.activity_object}-{self.activity}"
+
+
+
+class XModel():
+    '''
+    Add get activities method to model class
+    '''
+    def get_activities(self):
+        '''
+        Get all activities related to the selected object
+        '''
+        try:
+            activities = XActivity.objects.filter(
+                            activity_type=get_content_type_for_model(self),
+                            activity_id=self.id).order_by('-created_at')
+        except Exception:
+            activities = None
+        return activities
