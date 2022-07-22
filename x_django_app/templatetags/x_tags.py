@@ -4,6 +4,7 @@ from langdetect import detect
 import json
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
+from django.db.models import Sum
 
 
 register = template.Library()
@@ -133,36 +134,37 @@ def make_clear(text):
     return text
 
 
-@register.filter
+@register.simple_tag
+def get_sum(results_objects, field_name):
+    '''
+    Return the sum of given objects
+    '''
+    field_sum = f"{field_name}__sum"
+
+    if results_objects.all():
+        results_total = float(results_objects.aggregate(
+                                            Sum(field_name)).get(field_sum))
+    else:
+        return 0
+
+    return results_total
+
+
+@register.simple_tag
 def permission_check(user, permission):
     '''
     Check if user has permission
     '''
-    permission_details = permission.split('.')
-    if len(permission_details) == 1:
-        try:
-            user_permission = Permission.objects.get(
-                                        codename=permission_details[0])
-            if user.user_permissions.filter(id=user_permission.id).exists():
-                return True
-            else:
-                return False
-        except Exception as error_type:
-            print(f"{permission_details[0]}-{error_type}")
-            return False
-    elif len(permission_details) == 2:
-        try:
-            content_type = ContentType.objects.filter(
-                                            app_label=permission_details[0])
-            user_permission = Permission.objects.get(
+    try:
+        content_type = ContentType.objects.filter(app_label=permission.split('.')[0])
+        user_permission = Permission.objects.get(
                                             content_type__in=content_type,
-                                            codename=permission_details[1])
-            if user.user_permissions.filter(id=user_permission.id).exists():
-                return True
-            else:
-                return False
-        except Exception as error_type:
-            print(f"{permission}-{error_type}")
+                                            codename=permission.split('.')[1])
+        if user.user_permissions.filter(
+                                    id=user_permission.id).exists():
+            return True
+        else:
             return False
-    else:
+    except Exception as error_type:
+        print(f"{permission}-{error_type}")
         return False
