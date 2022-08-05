@@ -59,8 +59,7 @@ Django application for all my custom stuff
 
 ## Install:
 
-* Install python > 3.7.3\
-recommended python==3.8.2
+* Install python > 3.8.8
 
 * Install using pip\
 pip install x-django-app
