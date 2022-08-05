@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from x_django_app.models import XModel
 
-class Recipe(models.Model):
+
+class Recipe(models.Model, XModel):
     '''
     Model for Recipes
     '''
@@ -32,7 +34,7 @@ class Recipe(models.Model):
         return self.name
 
 
-class Item(models.Model):
+class Item(models.Model, XModel):
     '''
     Model for recipe's items
     '''
